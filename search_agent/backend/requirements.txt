@@ -1,0 +1,10 @@
+fastapi==0.110.0
+uvicorn==0.28.0
+qdrant-client[fastembed]==1.8.0
+mcp==0.1.0
+sentence-transformers==2.5.1
+PyMuPDF==1.23.26
+python-multipart==0.0.9
+pydantic==2.6.3
+pydantic-settings==2.2.1
+requests==2.31.0
