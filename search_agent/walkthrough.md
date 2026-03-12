@@ -6,7 +6,7 @@ The Search Agent application is now fully constructed and tested! It employs a s
 1. **Python FastAPI Backend**
    - **Modular Interfaces:** Built distinct protocols for `Chunker`, `Embedder`, `DocumentProcessor`, and `VectorDatabaseProvider` to allow easy swapping (e.g. from local sentence-transformers to OpenAI).
    - **Local Semantic Network:** Leverages `PyMuPDF` to parse dense bytes (PDFs), recursively chunks the strings, creates dense embeddings via `sentence-transformers`, and stores them locally.
-   - **Hybrid Search via Qdrant/ChromaDB:** A configurable Fallback network was implemented. By default, the system uses `ChromaDB` as the primary and `Qdrant` as the fallback (switchable via `PRIMARY_DB` and `FALLBACK_DB`). Both providers include specialized thread-safety logic (Single-threaded executor for Chroma, Thread-local storage for Qdrant) to manage SQLite connection isolation.
+   - **Hybrid Search via Qdrant/ChromaDB:** A configurable Fallback network was implemented. By default, the system uses `ChromaDB` as the primary and `Qdrant` as the fallback (switchable via `PRIMARY_DB` and `FALLBACK_DB`). Both providers utilize a unified **Single-threaded worker executor** pattern to manage SQLite connection isolation, ensuring rock-solid stability in both `:memory:` and persistent modes.
    - **Agent Modularity:** Created a dedicated `/api/v1/agent/2a2` remote API route as well as a standard Model Context Protocol (MCP) Server-Sent Events endpoint at `/mcp/sse`.
 
 2. **Next.js Deep Aesthetics Dashboard**
