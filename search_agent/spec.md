@@ -89,4 +89,7 @@ class VectorDatabaseProvider(ABC):
 - **Configuration & Security**: The system utilises `pydantic-settings` to manage environment variables gracefully (`API_HOST`, `CORS_ORIGINS`, `PRIMARY_DB`, `FALLBACK_DB`, `EMBEDDER_MODEL`). The Next.js frontend relies on `NEXT_PUBLIC_API_URL` to query the production/remote backend.
 - **Observability**: Built-in Python `print()` statements are avoided in favour of `loguru`, offering robust, thread-safe, and structured logging for complex Multi-Agent operations.
 - **Database Switching**: The `PRIMARY_DB` and `FALLBACK_DB` environment variables (accepted values: `qdrant`, `chroma`) allow operators to swap which database serves as primary or fallback without touching code. The `FallbackVectorDatabaseProvider` replicates writes to both and degrades search to the fallback automatically.
+- **SQLite Thread-Safety**: Since local vector databases often rely on SQLite for metadata, which restricts cross-thread connection usage, the system implements specific safety strategies:
+  - **ChromaDB**: Managed via a dedicated single-threaded executor to ensure the SQLite connection is always created and used on a single background thread.
+  - **Qdrant**: Managed via `threading.local()` to ensure each worker thread maintains its own private client instance and SQLite connection.
 - **Qdrant Compatibility**: The backend targets `qdrant-client` ≥ 1.17, using `query_points()` (not the removed `search()`) and deterministic UUID-5 point IDs.

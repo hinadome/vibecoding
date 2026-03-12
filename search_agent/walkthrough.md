@@ -6,7 +6,7 @@ The Search Agent application is now fully constructed and tested! It employs a s
 1. **Python FastAPI Backend**
    - **Modular Interfaces:** Built distinct protocols for `Chunker`, `Embedder`, `DocumentProcessor`, and `VectorDatabaseProvider` to allow easy swapping (e.g. from local sentence-transformers to OpenAI).
    - **Local Semantic Network:** Leverages `PyMuPDF` to parse dense bytes (PDFs), recursively chunks the strings, creates dense embeddings via `sentence-transformers`, and stores them locally.
-   - **Hybrid Search via Qdrant/ChromaDB:** A configurable Fallback network was implemented. By default the system uses local `Qdrant` as primary and `ChromaDB` as fallback, but this is switchable at startup via the `PRIMARY_DB` and `FALLBACK_DB` environment variables.
+   - **Hybrid Search via Qdrant/ChromaDB:** A configurable Fallback network was implemented. By default, the system uses `ChromaDB` as the primary and `Qdrant` as the fallback (switchable via `PRIMARY_DB` and `FALLBACK_DB`). Both providers include specialized thread-safety logic (Single-threaded executor for Chroma, Thread-local storage for Qdrant) to manage SQLite connection isolation.
    - **Agent Modularity:** Created a dedicated `/api/v1/agent/2a2` remote API route as well as a standard Model Context Protocol (MCP) Server-Sent Events endpoint at `/mcp/sse`.
 
 2. **Next.js Deep Aesthetics Dashboard**
@@ -34,8 +34,8 @@ All backend settings are managed via environment variables (or a `.env` file). S
 | `CORS_ORIGINS` | `["*"]` | Allowed CORS origins |
 | `QDRANT_PATH` | `./qdrant_data` | Filesystem path for Qdrant persistence |
 | `CHROMA_PATH` | `./chroma_data` | Filesystem path for ChromaDB persistence |
-| `PRIMARY_DB` | `qdrant` | Primary vector database (`qdrant` or `chroma`) |
-| `FALLBACK_DB` | `chroma` | Fallback vector database (`qdrant` or `chroma`) |
+| `PRIMARY_DB` | `chroma` | Primary vector database (`qdrant` or `chroma`) |
+| `FALLBACK_DB` | `qdrant` | Fallback vector database (`qdrant` or `chroma`) |
 | `EMBEDDER_MODEL` | `all-MiniLM-L6-v2` | HuggingFace sentence-transformer model name |
 
 **Frontend** (set in `frontend/.env.local`):
